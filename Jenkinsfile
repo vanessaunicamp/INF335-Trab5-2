@@ -4,9 +4,10 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                checkout scm
+                checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'github-pat', url: 'https://github.com/vanessaunicamp/INF335-Trab5-2']]])
             }
         }
+
         stage('Build Docker Image') {
             steps {
                 script {
@@ -14,12 +15,11 @@ pipeline {
                 }
             }
         }
+
         stage('Run Docker Image') {
             steps {
                 script {
-                    docker.image('olaunicamp').inside {
-                        bat 'java OlaUnicamp'
-                    }
+                    docker.image('olaunicamp').run()
                 }
             }
         }
