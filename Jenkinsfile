@@ -16,20 +16,12 @@ pipeline {
             }
         }
 
-        stage('Run Docker Container') {
+        stage('Run Docker Image') {
             steps {
                 script {
-                    // Executar o container Docker
-                    def dockerContainer = docker.image('olaunicamp').run("--name olaunicamp-container -d")
-                    sh "docker exec olaunicamp-container echo 'Executing commands inside running container'"
+                    docker.image('olaunicamp').run()
                 }
             }
-        }
-    }
-
-    post {
-        always {
-            echo 'Finalizando Pipeline'
         }
     }
 }
