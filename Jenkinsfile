@@ -16,12 +16,26 @@ pipeline {
             }
         }
 
-        stage('Run Docker Image') {
+        stage('Run Docker Container') {
             steps {
                 script {
-                    docker.image('olaunicamp').run()
+                    // Primeiro, pare o container se estiver rodando para evitar conflitos
+                    docker.image('olaunicamp').stop()
+
+                    // Remova o container antigo se existir
+                    docker.image('olaunicamp').remove()
+
+                    // Execute o container Docker
+                    def dockerContainer = docker.image('olaunicamp').run("--name olaunicamp-container -d")
+                    sh "docker exec olaunicamp-container echo 'Executing commands inside running container'"
                 }
             }
+        }
+    }
+
+    post {
+        always {
+            echo 'Finalizando Pipeline'
         }
     }
 }
