@@ -1,4 +1,7 @@
- stages {
+pipeline {
+    agent any
+
+    stages {
         stage('Checkout') {
             steps {
                 checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'github-pat', url: 'https://github.com/vanessaunicamp/INF335-Trab5-2']]])
@@ -20,4 +23,5 @@
                 }
             }
         }
- }
+    }
+}
