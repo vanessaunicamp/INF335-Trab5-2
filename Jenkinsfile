@@ -1,27 +1,22 @@
-pipeline {
-    agent any
-    
-    stages {
+ stages {
         stage('Checkout') {
             steps {
-                checkout scm
+                checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'github-pat', url: 'https://github.com/vanessaunicamp/INF335-Trab5-2']]])
             }
         }
-        
+
         stage('Build Docker Image') {
             steps {
                 script {
-                    def dockerImage = docker.build("olaunicamp")
+                    docker.build('olaunicamp')
                 }
             }
         }
-        
+
         stage('Run Docker Image') {
             steps {
                 script {
-                    dockerImage.run("--rm -d -p 8080:8080")
+                    docker.image('olaunicamp').run()
                 }
             }
         }
-    }
-}
