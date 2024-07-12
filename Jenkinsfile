@@ -11,7 +11,12 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    docker.build('olaunicamp')
+                    def dockerImage = docker.build('olaunicamp')
+                    dockerImage.inside {
+                        // Comandos que você deseja executar dentro do contêiner Docker
+                        sh 'echo "Executando dentro do contêiner Docker"'
+                        sh 'ls -l'
+                    }
                 }
             }
         }
@@ -19,7 +24,14 @@ pipeline {
         stage('Run Docker Image') {
             steps {
                 script {
-                    docker.image('olaunicamp').run()
+                    def dockerContainer = docker.image('olaunicamp').run()
+                    // Capturar a saída do contêiner e imprimir no console
+                    def output = dockerContainer.inside {
+                        sh 'echo "Executando o contêiner Docker"'
+                        sh 'ls -l'
+                    }
+                    echo "Saída do contêiner Docker:"
+                    echo output
                 }
             }
         }
